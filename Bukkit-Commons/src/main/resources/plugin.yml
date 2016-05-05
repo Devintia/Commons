@@ -1,0 +1,4 @@
+name: DevintiaCommons
+version: 1.0.0
+author: DevinitaTeam
+main: net.devintia.commons.bukkit.TestPlugin
