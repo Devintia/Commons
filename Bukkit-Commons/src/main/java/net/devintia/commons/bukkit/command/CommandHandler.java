@@ -217,13 +217,15 @@ public class CommandHandler implements CommandExecutor {
             if ( !commandLabel.contains( "." ) ) {
                 org.bukkit.command.Command cmd = bukkitCommandMap.getCommand( commandLabel );
                 HelpTopic topic = new GenericCommandHelpTopic( cmd );
+                String perm = commandMap.get( commandLabel ).getKey().getAnnotation( CommandInfo.class ).perm();
+                topic.amendCanSee( perm + ".help" );
                 help.add( topic );
             }
         }
-        //TODO which perm node is requiered to be able to see the help? Where do we get that perm node from? Hardcode?
-        IndexHelpTopic topic = new IndexHelpTopic( plugin.getName(), "All commands for " + plugin.getName(), null, help,
+        IndexHelpTopic topic = new IndexHelpTopic( plugin.getName(), "All commands for " + plugin.getName(), plugin.getName() + ".help", help,
                 "Below is a list of all " + plugin.getName() + " commands:" );
         Bukkit.getServer().getHelpMap().addTopic( topic );
+        help.forEach( ( t ) -> Bukkit.getServer().getHelpMap().addTopic( t ) );
     }
 
     private void registerCommand( String commandLabel, String description, String usage, Method executorMethod, Object executorObject ) {
@@ -292,6 +294,7 @@ public class CommandHandler implements CommandExecutor {
     /**
      * Completely unregisters a command. This can only unregister root level commands, all sub commands get unregistered too.
      * If you whish to update the help page, you need to do that manually!
+     *
      * @param commandLabel The commandLabel to unregister
      */
     public void unregisterCommand( String commandLabel ) {
