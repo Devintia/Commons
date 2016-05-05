@@ -142,8 +142,8 @@ public class CommandHandler implements CommandExecutor {
                     //TODO Send no permission message
                     return true;
                 }
-                if ( commandInfo.allowConsole() && !( commandSender instanceof Player ) ) {
-                    //TODO Send no console message
+                if ( !commandInfo.allowConsole() && !( commandSender instanceof Player ) ) {
+                    commandSender.sendMessage( "This command can only be executed in-game!" );
                     return true;
                 }
                 try {
