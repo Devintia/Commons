@@ -11,6 +11,11 @@ public class Timer implements AutoCloseable {
     private final long startMs;
     private final String topic;
 
+    /**
+     * The default constructor for the timer
+     *
+     * @param topic The topic of the measure
+     */
     public Timer ( String topic ) {
         this.topic = topic;
         this.startMs = System.currentTimeMillis();
