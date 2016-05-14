@@ -147,6 +147,15 @@ class ArmorStandModelEntity {
         }
     }
 
+    void move( Vector velo ) {
+        if ( armorStand != null ) {
+            armorStand.setVelocity( velo );
+        }
+        if ( villager != null ) {
+            villager.setVelocity( velo );
+        }
+    }
+
     private CraftArmorStand spawnArmorStand( Location loc, Plugin plugin ) {
         CraftWorld cw = ( (CraftWorld) loc.getWorld() );
         NoGravityArmorStand a = new NoGravityArmorStand( cw.getHandle(), loc.getX(), loc.getY(), loc.getZ() );
