@@ -2,7 +2,6 @@ package net.devintia.commons.bukkit.armorstand;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -19,7 +18,7 @@ public class ArmorStandModelHandler {
      * Called onDisable, will despawn all remaining models
      */
     public void disable() {
-        for(ArmorStandModel model : models){
+        for ( ArmorStandModel model : models ) {
             model.despawn();
         }
 
@@ -59,5 +58,12 @@ public class ArmorStandModelHandler {
      */
     public void remove( ArmorStandModel model ) {
         models.remove( model );
+    }
+
+    /**
+     * @return a list with all loaded models
+     */
+    public List<ArmorStandModel> getModels() {
+        return models;
     }
 }

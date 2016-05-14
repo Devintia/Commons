@@ -1,13 +1,13 @@
 package net.devintia.commons.bukkit;
 
+import net.devintia.commons.bukkit.armorstand.ArmorStandModel;
+import net.devintia.commons.bukkit.armorstand.ArmorStandModelHandler;
+import net.devintia.commons.bukkit.armorstand.ArmorStandModelImporter;
 import net.devintia.commons.bukkit.command.CommandArguments;
 import net.devintia.commons.bukkit.command.CommandHandler;
 import net.devintia.commons.bukkit.command.CommandInfo;
 import net.devintia.commons.bukkit.command.CommandUtil;
 import net.devintia.commons.bukkit.command.CompleterInfo;
-import net.devintia.commons.bukkit.armorstand.ArmorStandModel;
-import net.devintia.commons.bukkit.armorstand.ArmorStandModelHandler;
-import net.devintia.commons.bukkit.armorstand.ArmorStandModelImporter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -101,7 +101,7 @@ public class TestPlugin extends JavaPlugin {
 
     @CommandInfo( name = "loadmodel", perm = "loadmodel", description = "Loads and spawns a armor stand model", usage = "<command> <filename>", allowConsole = false )
     public void loadModel( CommandArguments args ) {
-        if ( args.getNumArgs() != 1 ) {
+        if ( args.getNumArgs() < 1 ) {
             args.getSender().sendMessage( ChatColor.RED + "Usage: " + args.getCommand().getUsage() );
             return;
         }
@@ -118,6 +118,10 @@ public class TestPlugin extends JavaPlugin {
         }
 
         String display = file.getName();
+        if ( args.getNumArgs() >= 2 ) {
+            display = args.getArg( 1 );
+        }
+
         if ( display.endsWith( ".model" ) ) {
             display.replace( ".model", "" );
         }
@@ -129,10 +133,10 @@ public class TestPlugin extends JavaPlugin {
             return;
         }
 
-        Location loc = new Location( args.getPlayer().getWorld(), args.getPlayer().getLocation().getBlockX() + 0.5, args.getPlayer().getLocation().getBlockY(), args.getPlayer().getLocation().getBlockZ() + 0.5 );
+        Location loc = new Location( args.getPlayer().getWorld(), args.getPlayer().getLocation().getX(), args.getPlayer().getLocation().getY(), args.getPlayer().getLocation().getZ() );
         model.spawn( loc, this );
 
-        args.getSender().sendMessage( "done" );
+        args.getSender().sendMessage( "spawned: " + display );
     }
 
     @CompleterInfo( name = "loadmodel" )
@@ -143,6 +147,35 @@ public class TestPlugin extends JavaPlugin {
             String[] names = getDataFolder().list( ( dir, name ) -> name.endsWith( ".model" ) );
 
             result.addAll( Arrays.asList( names ) );
+
+            return CommandUtil.filterTabCompletions( result, args.getArg( 0 ) );
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @CommandInfo( name = "movemodel", perm = "movemodel", allowConsole = false )
+    public void moveModel( CommandArguments args ) {
+        if ( args.getNumArgs() != 1 ) {
+            args.getSender().sendMessage( "/movemodel <model>" );
+        }
+
+        ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
+        model.move( args.getPlayer().getLocation(), this, 0.5f, () -> System.out.println( "moved : " + args.getArg( 0 ) ) );
+    }
+
+    @CompleterInfo( name = "movemodel" )
+    public List<String> moveModelCompleter( CommandArguments args ) {
+        final List<String> result = new ArrayList<>();
+
+        if ( args.getArgs().length == 1 ) {
+            List<String> names = new ArrayList<>();
+
+            for ( ArmorStandModel model : armorStandModelHandler.getModels() ) {
+                names.add( model.getName() );
+            }
+
+            result.addAll( names );
 
             return CommandUtil.filterTabCompletions( result, args.getArg( 0 ) );
         } else {
