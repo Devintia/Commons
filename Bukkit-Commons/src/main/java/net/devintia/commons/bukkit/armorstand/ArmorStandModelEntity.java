@@ -1,6 +1,7 @@
 package net.devintia.commons.bukkit.armorstand;
 
 import com.google.common.collect.Sets;
+import net.minecraft.server.v1_9_R1.EntityArmorStand;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.EntityVillager;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
@@ -41,6 +42,8 @@ class ArmorStandModelEntity {
     private BlockState blockState;
     private ArmorStand armorStand;
     private Villager villager;
+
+    private float rotation;
 
     //fields
     private static Field bField;
@@ -96,6 +99,7 @@ class ArmorStandModelEntity {
                 entityVillager.noclip = true;
                 entityVillager.b( true );//silent
                 entityVillager.collides = false;
+                //TODO test which ones we realy need
                 entityVillager.yaw = loc.getYaw();
                 entityVillager.pitch = loc.getPitch();
                 entityVillager.lastPitch = loc.getPitch();
@@ -154,6 +158,25 @@ class ArmorStandModelEntity {
         if ( villager != null ) {
             villager.setVelocity( velo );
         }
+        location.add( velo );
+    }
+
+    void rotate( float rad ) {
+        rotation = ( rotation + rad ) % 360;
+        if ( armorStand != null ) {
+            EntityArmorStand entity = ( (CraftArmorStand) armorStand ).getHandle();
+            entity.yaw = rotation;
+            entity.lastYaw = rotation;
+            entity.aO = rotation;
+            entity.aM = rotation;
+        }
+        if ( villager != null ) {
+            EntityVillager entity = ( (CraftVillager) villager ).getHandle();
+            entity.yaw = rotation;
+            entity.lastYaw = rotation;
+            entity.aO = rotation;
+            entity.aM = rotation;
+        }
     }
 
     private CraftArmorStand spawnArmorStand( Location loc, Plugin plugin ) {
@@ -173,5 +196,9 @@ class ArmorStandModelEntity {
         } catch ( Exception exc ) {
             exc.printStackTrace();
         }
+    }
+
+    public Vector getLocation() {
+        return location;
     }
 }

@@ -182,4 +182,41 @@ public class TestPlugin extends JavaPlugin {
             return new ArrayList<>();
         }
     }
+
+    @CommandInfo( name = "rotatemodel", perm = "roatemodel", allowConsole = false )
+    public void rotateModel( CommandArguments args ) {
+        if ( args.getNumArgs() != 2 ) {
+            args.getSender().sendMessage( "/rotatemodel <model> <degrees>" );
+        }
+
+        float degrees;
+        try {
+            degrees = Float.parseFloat( args.getArg( 1 ) );
+        } catch ( NumberFormatException ex ) {
+            args.getSender().sendMessage( "Invalid number " + args.getArg( 1 ) );
+            return;
+        }
+
+        ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
+        model.rotate( degrees, this, () -> System.out.println( "moved : " + args.getArg( 0 ) ) );
+    }
+
+    @CompleterInfo( name = "rotatemodel" )
+    public List<String> rotateModelCompleter( CommandArguments args ) {
+        final List<String> result = new ArrayList<>();
+
+        if ( args.getArgs().length == 1 ) {
+            List<String> names = new ArrayList<>();
+
+            for ( ArmorStandModel model : armorStandModelHandler.getModels() ) {
+                names.add( model.getName() );
+            }
+
+            result.addAll( names );
+
+            return CommandUtil.filterTabCompletions( result, args.getArg( 0 ) );
+        } else {
+            return new ArrayList<>();
+        }
+    }
 }

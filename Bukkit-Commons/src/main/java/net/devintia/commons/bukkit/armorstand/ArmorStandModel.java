@@ -104,4 +104,39 @@ public class ArmorStandModel {
     public boolean isMoving() {
         return moving;
     }
+
+    /**
+     * Rotates the model
+     *
+     * @param degrees  the number of degrees the model should be rotated
+     * @param plugin   the plugin that rotates the model
+     * @param callBack a callback that gets executed if the move was finished, may be null
+     */
+    public void rotate( float degrees, Plugin plugin, Runnable callBack ) {
+        for ( ArmorStandModelEntity entity : entities ) {
+            Vector loc = entity.getLocation();
+            Vector rot = rotate( loc, (float) Math.toRadians( degrees ) );
+            Vector velo = rot.clone().subtract( loc );
+            entity.move( velo );
+
+            entity.rotate( degrees );
+        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for ( ArmorStandModelEntity entity : entities ) {
+                    entity.move( new Vector( 0, 0, 0 ) );
+                }
+                callBack.run();
+            }
+        }.runTaskLater( plugin, 2 );
+    }
+
+    private Vector rotate( Vector vector, float theta ) {
+        double x = ( vector.getX() * Math.cos( theta ) ) - ( vector.getZ() * Math.sin( theta ) );
+        double z = ( vector.getX() * Math.sin( theta ) ) - ( vector.getZ() * Math.cos( theta ) );
+
+        return new Vector( x, vector.getY(), z );
+    }
 }
