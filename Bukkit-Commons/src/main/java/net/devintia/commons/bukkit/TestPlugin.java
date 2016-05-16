@@ -2,6 +2,7 @@ package net.devintia.commons.bukkit;
 
 import net.devintia.commons.bukkit.armorstand.ArmorStandModelHandler;
 import net.devintia.commons.bukkit.armorstand.ArmorStandModelImporter;
+import net.devintia.commons.bukkit.armorstand.ArmorStandModelListener;
 import net.devintia.commons.bukkit.armorstand.commands.ArmorStandModelCommands;
 import net.devintia.commons.bukkit.armorstand.commands.ArmorStandModelCompleter;
 import net.devintia.commons.bukkit.command.CommandArguments;
@@ -37,6 +38,8 @@ public class TestPlugin extends JavaPlugin {
 
         cmdHandler.register( new ArmorStandModelCommands( armorStandModelHandler, this ) );
         cmdHandler.register( new ArmorStandModelCompleter( armorStandModelHandler, this ) );
+
+        getServer().getPluginManager().registerEvents( new ArmorStandModelListener(),this );
     }
 
     @Override

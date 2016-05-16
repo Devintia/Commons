@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -95,6 +96,8 @@ class ArmorStandModelEntity {
                 loc.getBlock().setTypeIdAndData( item.getTypeId(), (byte) item.getDurability(), false );
                 break;
         }
+
+        armorStand.setMetadata( "armorstandmodel", new FixedMetadataValue( plugin, true ) );
     }
 
     void despawn() {
