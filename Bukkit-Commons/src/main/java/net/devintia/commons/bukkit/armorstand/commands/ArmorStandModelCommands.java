@@ -74,6 +74,11 @@ public class ArmorStandModelCommands {
         }
 
         ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
+        if ( model == null ) {
+            args.getSender().sendMessage( "unknown model " + args.getArg( 0 ) );
+            return;
+        }
+
         model.move( args.getPlayer().getLocation(), plugin, 0.5f, () -> System.out.println( "moved : " + args.getArg( 0 ) ) );
     }
 
