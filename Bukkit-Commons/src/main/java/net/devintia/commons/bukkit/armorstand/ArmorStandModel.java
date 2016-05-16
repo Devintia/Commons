@@ -46,6 +46,13 @@ public class ArmorStandModel {
         for ( ArmorStandModelEntity entity : entities ) {
             entity.spawn( rootLocation, plugin );
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
+            }
+        }.runTaskTimer( plugin, 1, 1 );
     }
 
     /**
@@ -104,10 +111,9 @@ public class ArmorStandModel {
                     }
 
                     cancel();
-                }else{
+                } else {
                     rootLocation.add( velo );
                 }
-                rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
             }
         }.runTaskTimer( plugin, 0, 1 );
     }
@@ -139,8 +145,6 @@ public class ArmorStandModel {
             entity.rotate( degrees );
             entity.move( velo );
         }
-
-        rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
 
         new BukkitRunnable() {
             @Override
