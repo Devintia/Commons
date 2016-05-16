@@ -98,7 +98,7 @@ public class ArmorStandModelCommands {
         if ( args.getNumArgs() == 1 ) {
             new BukkitRunnable() {
                 int count = 1;
-                int deg = 10;
+                int deg = 5;
 
                 @Override
                 public void run() {
@@ -108,7 +108,7 @@ public class ArmorStandModelCommands {
                         cancel();
                     }
                 }
-            }.runTaskTimer( plugin, 1, 3 );
+            }.runTaskTimer( plugin, 1, 1 );
             return;
         }
 

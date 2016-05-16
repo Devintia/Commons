@@ -95,7 +95,6 @@ public class ArmorStandModel {
                 if ( distance < 1 ) {
                     for ( ArmorStandModelEntity entity : entities ) {
                         entity.move( new Vector( 0, 0, 0 ) );
-                        //  entity.teleport( loc, null );
                     }
 
                     moving = false;
@@ -130,9 +129,6 @@ public class ArmorStandModel {
     public void rotate( float degrees, Plugin plugin, Runnable callBack ) {
         checkNotNull( plugin );
         checkArgument( degrees >= 0 && degrees <= 360 );
-        checkArgument( !isMoving(), "Can't be rotated if currently moving" );
-
-        moving = true;
 
         this.rotation = ( rotation + degrees ) % 360;
 
@@ -152,8 +148,6 @@ public class ArmorStandModel {
                 for ( ArmorStandModelEntity entity : entities ) {
                     entity.move( new Vector( 0, 0, 0 ) );
                 }
-
-                moving = false;
 
                 if ( callBack != null ) {
                     callBack.run();
