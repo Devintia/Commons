@@ -3,6 +3,8 @@ package net.devintia.commons.bukkit.armorstand;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Class to store all loaded models to keep track of them and remove them on disable
  *
@@ -25,6 +27,8 @@ public class ArmorStandModelHandler {
     }
 
     void add( ArmorStandModel model ) {
+        checkNotNull( model );
+
         models.add( model );
     }
 
@@ -33,6 +37,8 @@ public class ArmorStandModelHandler {
      * @return the reference to the model with the given name
      */
     public ArmorStandModel get( String name ) {
+        checkNotNull( name );
+
         for ( ArmorStandModel model : models ) {
             if ( model.getName().equals( name ) ) {
                 return model;
@@ -47,6 +53,8 @@ public class ArmorStandModelHandler {
      * @param name the name of the model to remove
      */
     public void remove( String name ) {
+        checkNotNull( name );
+
         models.remove( get( name ) );
     }
 
@@ -56,6 +64,8 @@ public class ArmorStandModelHandler {
      * @param model the model to remove
      */
     public void remove( ArmorStandModel model ) {
+        checkNotNull( model );
+
         models.remove( model );
     }
 

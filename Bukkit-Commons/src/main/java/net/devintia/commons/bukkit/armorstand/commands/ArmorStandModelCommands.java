@@ -79,7 +79,7 @@ public class ArmorStandModelCommands {
             return;
         }
 
-        model.move( args.getPlayer().getLocation(), plugin, 0.5f, () -> System.out.println( "moved : " + args.getArg( 0 ) ) );
+        model.move( args.getPlayer().getLocation(), plugin, 0.5f, null );
     }
 
 
@@ -98,7 +98,7 @@ public class ArmorStandModelCommands {
         if ( args.getNumArgs() == 1 ) {
             new BukkitRunnable() {
                 int count = 1;
-                int deg = 5;
+                int deg = 10;
 
                 @Override
                 public void run() {
@@ -108,7 +108,7 @@ public class ArmorStandModelCommands {
                         cancel();
                     }
                 }
-            }.runTaskTimer( plugin, 1, 1 );
+            }.runTaskTimer( plugin, 1, 3 );
             return;
         }
 
@@ -120,7 +120,7 @@ public class ArmorStandModelCommands {
             return;
         }
 
-        model.rotate( degrees, plugin, () -> System.out.println( "moved : " + args.getArg( 0 ) ) );
+        model.rotate( degrees, plugin, null );
     }
 
 
@@ -146,6 +146,7 @@ public class ArmorStandModelCommands {
             args.getSender().sendMessage( "/ridemodel <model>" );
         }
 
+        // TODO we need a designated "seat"
         ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
         if ( model == null ) {
             args.getSender().sendMessage( "unknown model " + args.getArg( 0 ) );

@@ -10,6 +10,9 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Holds up multiple ArmrStandModelEntities.<br>
  * Can spawn, despawn (and in the future: move) the whole model
@@ -72,13 +75,12 @@ public class ArmorStandModel {
      * @param callBack a callback that gets executed if the move was finished, may be null
      */
     public void move( Location loc, Plugin plugin, float speed, Runnable callBack ) {
-        if ( rootLocation == null ) {
-            throw new IllegalStateException( "Model need to be spawned before it can be moved!" );
-        }
+        checkNotNull( loc );
+        checkNotNull( plugin );
+        checkNotNull( rootLocation, "Model needs to be spawned before it can be moved!" );
+        checkArgument( !isMoving(), "Can't be moved if currently moving" );
 
-        if ( isMoving() ) {
-            throw new IllegalStateException( "Can't be moved if currently moving" );
-        }
+        moving = true;
 
         Vector velo = loc.toVector().subtract( rootLocation.toVector() ).normalize().multiply( speed );
 
@@ -95,15 +97,18 @@ public class ArmorStandModel {
                         entity.move( new Vector( 0, 0, 0 ) );
                         //  entity.teleport( loc, null );
                     }
-                    // rootLocation = loc;
+
+                    moving = false;
+
                     if ( callBack != null ) {
                         callBack.run();
                     }
-                    rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
+
                     cancel();
-                } else {
+                }else{
                     rootLocation.add( velo );
                 }
+                rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
             }
         }.runTaskTimer( plugin, 0, 1 );
     }
@@ -123,15 +128,23 @@ public class ArmorStandModel {
      * @param callBack a callback that gets executed if the move was finished, may be null
      */
     public void rotate( float degrees, Plugin plugin, Runnable callBack ) {
+        checkNotNull( plugin );
+        checkArgument( degrees >= 0 && degrees <= 360 );
+        checkArgument( !isMoving(), "Can't be rotated if currently moving" );
+
+        moving = true;
+
         this.rotation = ( rotation + degrees ) % 360;
 
         for ( ArmorStandModelEntity entity : entities ) {
             Vector loc = entity.getLocation();
             Vector rot = rotate( loc, (float) Math.toRadians( degrees ) );
             Vector velo = rot.clone().subtract( loc );
-            entity.move( velo );
             entity.rotate( degrees );
+            entity.move( velo );
         }
+
+        rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
 
         new BukkitRunnable() {
             @Override
@@ -139,6 +152,9 @@ public class ArmorStandModel {
                 for ( ArmorStandModelEntity entity : entities ) {
                     entity.move( new Vector( 0, 0, 0 ) );
                 }
+
+                moving = false;
+
                 if ( callBack != null ) {
                     callBack.run();
                 }
@@ -161,8 +177,10 @@ public class ArmorStandModel {
      * @param callBack a callback that gets executed if the move was finished, may be null
      */
     public void lookAt( Plugin plugin, Location loc, Runnable callBack ) {
+        checkNotNull( plugin );
+        checkNotNull( loc );
+
         float angle = getLocalAngle( rootLocation.toVector(), loc.toVector() ) - rotation;
-        System.out.println( "angle = " + angle );
         rotate( angle, plugin, callBack );
     }
 
@@ -183,6 +201,9 @@ public class ArmorStandModel {
      * @param plugin the plugin that executes the move
      */
     public void rotateAndMoveTo( Player p, Plugin plugin ) {
+        checkNotNull( p );
+        checkNotNull( plugin );
+
         lookAt( plugin, p.getLocation(), () -> move( p.getLocation(), plugin, 0.4f, () -> new BukkitRunnable() {
             @Override
             public void run() {
@@ -192,6 +213,9 @@ public class ArmorStandModel {
     }
 
     public void addPassagner( Entity e ) {
+        checkNotNull( e );
+        checkArgument( !e.isDead() );
+        //TODO passagner stuff
         entities.get( 0 ).getEntity().setPassenger( e );
     }
 }

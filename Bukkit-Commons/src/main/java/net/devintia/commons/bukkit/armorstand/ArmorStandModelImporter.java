@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Imports ArmorstandModels
  *
@@ -42,6 +45,10 @@ public class ArmorStandModelImporter {
      * @return the imported model
      */
     public static ArmorStandModel importModel( String name, File file ) {
+        checkNotNull( name );
+        checkNotNull( file );
+        checkArgument( file.exists() );
+
         List<String> commands = new ArrayList<>();
         try ( BufferedReader reader = new BufferedReader( new FileReader( file ) ) ) {
             String buffer;
@@ -65,6 +72,9 @@ public class ArmorStandModelImporter {
      * @return the imported model
      */
     public static ArmorStandModel importModel( String modelName, List<String> commands ) {
+        checkNotNull( modelName );
+        checkNotNull( commands );
+
         List<ArmorStandModelEntity> entites = new ArrayList<>();
         String tag = null;
         for ( String command : commands ) {
