@@ -26,7 +26,6 @@ public class ArmorStandModel {
     private List<ArmorStandModelEntity> entities;
     private Location rootLocation;
     private float rotation;
-    private Vector rotVec = new Vector( -1, 0, 0 );
     private boolean moving = false;
 
     ArmorStandModel( String name, List<ArmorStandModelEntity> entites ) {
@@ -134,7 +133,7 @@ public class ArmorStandModel {
      */
     public void rotate( float degrees, Plugin plugin, Runnable callBack ) {
         checkNotNull( plugin );
-        checkArgument( degrees >= 0 && degrees <= 360 );
+        checkArgument( degrees >= -360 && degrees <= 360 );
 
         this.rotation = ( rotation + degrees ) % 360;
 
