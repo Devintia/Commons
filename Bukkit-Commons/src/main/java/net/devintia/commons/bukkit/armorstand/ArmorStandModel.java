@@ -1,6 +1,9 @@
 package net.devintia.commons.bukkit.armorstand;
 
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -19,6 +22,8 @@ public class ArmorStandModel {
     private String name;
     private List<ArmorStandModelEntity> entities;
     private Location rootLocation;
+    private float rotation;
+    private Vector rotVec = new Vector( -1, 0, 0 );
     private boolean moving = false;
 
     ArmorStandModel( String name, List<ArmorStandModelEntity> entites ) {
@@ -84,18 +89,23 @@ public class ArmorStandModel {
         new BukkitRunnable() {
             @Override
             public void run() {
-                rootLocation.add( velo );
-                if ( loc.distance( rootLocation ) < 1 ) {
+                double distance = loc.distance( rootLocation );
+                if ( distance < 1 ) {
                     for ( ArmorStandModelEntity entity : entities ) {
                         entity.move( new Vector( 0, 0, 0 ) );
+                        //  entity.teleport( loc, null );
                     }
+                    // rootLocation = loc;
                     if ( callBack != null ) {
                         callBack.run();
                     }
+                    rootLocation.getWorld().playEffect( rootLocation, Effect.COLOURED_DUST, 0x2 );
                     cancel();
+                } else {
+                    rootLocation.add( velo );
                 }
             }
-        }.runTaskTimer( plugin, 1, 1 );
+        }.runTaskTimer( plugin, 0, 1 );
     }
 
     /**
@@ -113,12 +123,13 @@ public class ArmorStandModel {
      * @param callBack a callback that gets executed if the move was finished, may be null
      */
     public void rotate( float degrees, Plugin plugin, Runnable callBack ) {
+        this.rotation = ( rotation + degrees ) % 360;
+
         for ( ArmorStandModelEntity entity : entities ) {
             Vector loc = entity.getLocation();
             Vector rot = rotate( loc, (float) Math.toRadians( degrees ) );
             Vector velo = rot.clone().subtract( loc );
             entity.move( velo );
-
             entity.rotate( degrees );
         }
 
@@ -128,15 +139,59 @@ public class ArmorStandModel {
                 for ( ArmorStandModelEntity entity : entities ) {
                     entity.move( new Vector( 0, 0, 0 ) );
                 }
-                callBack.run();
+                if ( callBack != null ) {
+                    callBack.run();
+                }
             }
         }.runTaskLater( plugin, 2 );
     }
 
     private Vector rotate( Vector vector, float theta ) {
         double x = ( vector.getX() * Math.cos( theta ) ) - ( vector.getZ() * Math.sin( theta ) );
-        double z = ( vector.getX() * Math.sin( theta ) ) - ( vector.getZ() * Math.cos( theta ) );
+        double z = ( vector.getX() * Math.sin( theta ) ) + ( vector.getZ() * Math.cos( theta ) );
 
         return new Vector( x, vector.getY(), z );
+    }
+
+    /**
+     * Make the model look at a location
+     *
+     * @param plugin   the plugin that will execute the rotation
+     * @param loc      the location to look at
+     * @param callBack a callback that gets executed if the move was finished, may be null
+     */
+    public void lookAt( Plugin plugin, Location loc, Runnable callBack ) {
+        float angle = getLocalAngle( rootLocation.toVector(), loc.toVector() ) - rotation;
+        System.out.println( "angle = " + angle );
+        rotate( angle, plugin, callBack );
+    }
+
+    private float getLocalAngle( Vector point1, Vector point2 ) {
+        double dx = point2.getX() - point1.getX();
+        double dz = point2.getZ() - point1.getZ();
+        float angle = (float) Math.toDegrees( Math.atan2( dz, dx ) ) - 90;
+        if ( angle < 0 ) {
+            angle += 360.0F;
+        }
+        return angle;
+    }
+
+    /**
+     * Rotates the model and lets it move to the player
+     *
+     * @param p      the player to move to
+     * @param plugin the plugin that executes the move
+     */
+    public void rotateAndMoveTo( Player p, Plugin plugin ) {
+        lookAt( plugin, p.getLocation(), () -> move( p.getLocation(), plugin, 0.4f, () -> new BukkitRunnable() {
+            @Override
+            public void run() {
+                //rotateAndMoveTo( p, plugin );
+            }
+        }.runTaskLater( plugin, 2 ) ) );
+    }
+
+    public void addPassagner( Entity e ) {
+        entities.get( 0 ).getEntity().setPassenger( e );
     }
 }

@@ -11,6 +11,7 @@ import net.devintia.commons.bukkit.command.CompleterInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -185,8 +186,31 @@ public class TestPlugin extends JavaPlugin {
 
     @CommandInfo( name = "rotatemodel", perm = "roatemodel", allowConsole = false )
     public void rotateModel( CommandArguments args ) {
-        if ( args.getNumArgs() != 2 ) {
-            args.getSender().sendMessage( "/rotatemodel <model> <degrees>" );
+        if ( args.getNumArgs() < 1 ) {
+            args.getSender().sendMessage( "/rotatemodel <model> [degrees]" );
+        }
+
+        ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
+        if ( model == null ) {
+            args.getSender().sendMessage( "unknown model " + args.getArg( 0 ) );
+            return;
+        }
+
+        if ( args.getNumArgs() == 1 ) {
+            new BukkitRunnable() {
+                int count = 1;
+                int deg = 5;
+
+                @Override
+                public void run() {
+                    model.rotate( deg, TestPlugin.this, null );
+                    count += deg;
+                    if ( count > 360 ) {
+                        cancel();
+                    }
+                }
+            }.runTaskTimer( this, 1, 1 );
+            return;
         }
 
         float degrees;
@@ -197,12 +221,79 @@ public class TestPlugin extends JavaPlugin {
             return;
         }
 
-        ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
         model.rotate( degrees, this, () -> System.out.println( "moved : " + args.getArg( 0 ) ) );
     }
 
     @CompleterInfo( name = "rotatemodel" )
     public List<String> rotateModelCompleter( CommandArguments args ) {
+        final List<String> result = new ArrayList<>();
+
+        if ( args.getArgs().length == 1 ) {
+            List<String> names = new ArrayList<>();
+
+            for ( ArmorStandModel model : armorStandModelHandler.getModels() ) {
+                names.add( model.getName() );
+            }
+
+            result.addAll( names );
+
+            return CommandUtil.filterTabCompletions( result, args.getArg( 0 ) );
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @CommandInfo( name = "followmodel", perm = "followmodel", allowConsole = false )
+    public void followmodel( CommandArguments args ) {
+        if ( args.getNumArgs() < 1 ) {
+            args.getSender().sendMessage( "/followmodel <model>" );
+        }
+
+        ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
+        if ( model == null ) {
+            args.getSender().sendMessage( "unknown model " + args.getArg( 0 ) );
+            return;
+        }
+
+        model.rotateAndMoveTo( args.getPlayer(), this );
+    }
+
+    @CompleterInfo( name = "followmodel" )
+    public List<String> followmodelCompleter( CommandArguments args ) {
+        final List<String> result = new ArrayList<>();
+
+        if ( args.getArgs().length == 1 ) {
+            List<String> names = new ArrayList<>();
+
+            for ( ArmorStandModel model : armorStandModelHandler.getModels() ) {
+                names.add( model.getName() );
+            }
+
+            result.addAll( names );
+
+            return CommandUtil.filterTabCompletions( result, args.getArg( 0 ) );
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @CommandInfo( name = "ridemodel", perm = "ridemodel", allowConsole = false )
+    public void ridemodel( CommandArguments args ) {
+        if ( args.getNumArgs() < 1 ) {
+            args.getSender().sendMessage( "/ridemodel <model>" );
+        }
+
+        ArmorStandModel model = armorStandModelHandler.get( args.getArg( 0 ) );
+        if ( model == null ) {
+            args.getSender().sendMessage( "unknown model " + args.getArg( 0 ) );
+            return;
+        }
+
+        model.addPassagner( args.getPlayer() );
+    }
+
+    @CompleterInfo( name = "ridemodel" )
+    public List<String> ridemodelCompleter( CommandArguments args ) {
         final List<String> result = new ArrayList<>();
 
         if ( args.getArgs().length == 1 ) {

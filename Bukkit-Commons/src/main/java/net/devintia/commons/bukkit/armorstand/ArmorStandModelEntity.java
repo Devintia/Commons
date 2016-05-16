@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftVillager;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -198,7 +199,24 @@ class ArmorStandModelEntity {
         }
     }
 
-    public Vector getLocation() {
+    Vector getLocation() {
         return location;
+    }
+
+    void teleport( Location rootLocation, Vector newLocation ) {
+        if ( newLocation != null ) {
+            location = newLocation;
+        }
+        Location newLoc = new Location( rootLocation.getWorld(), rootLocation.getX() + location.getX(), rootLocation.getY() + location.getY(), rootLocation.getZ() + location.getZ() );
+        if ( armorStand != null ) {
+            armorStand.teleport( newLoc );
+        }
+        if ( villager != null ) {
+            villager.teleport( newLoc );
+        }
+    }
+
+    public Entity getEntity() {
+        return armorStand;
     }
 }
