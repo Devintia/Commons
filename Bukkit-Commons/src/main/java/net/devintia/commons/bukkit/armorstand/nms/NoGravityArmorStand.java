@@ -1,4 +1,4 @@
-package net.devintia.commons.bukkit.armorstand;
+package net.devintia.commons.bukkit.armorstand.nms;
 
 import net.minecraft.server.v1_9_R1.EntityArmorStand;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntityMetadata;
@@ -7,7 +7,6 @@ import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  * A custom armorstand that does not respect gravity.<br>
@@ -16,9 +15,9 @@ import org.bukkit.plugin.Plugin;
  * @author MiniDigger
  * @version 1.0.0
  */
-class NoGravityArmorStand extends EntityArmorStand {
+public class NoGravityArmorStand extends EntityArmorStand {
 
-    NoGravityArmorStand( World world, double d0, double d1, double d2) {
+    public NoGravityArmorStand( World world, double d0, double d1, double d2) {
         super( world, d0, d1, d2 );
         this.noclip = true;
     }
@@ -26,7 +25,7 @@ class NoGravityArmorStand extends EntityArmorStand {
     /**
      * Notifies the players about changes to this armorstand
      */
-    void update() {
+    public void update() {
         getDataWatcher();
         PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata( getId(), getDataWatcher(), false );
         for ( Player p : Bukkit.getOnlinePlayers() ) {

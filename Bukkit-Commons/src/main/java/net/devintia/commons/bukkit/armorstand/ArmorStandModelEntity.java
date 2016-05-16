@@ -1,30 +1,20 @@
 package net.devintia.commons.bukkit.armorstand;
 
-import com.google.common.collect.Sets;
-import net.minecraft.server.v1_9_R1.EntityArmorStand;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
-import net.minecraft.server.v1_9_R1.EntityVillager;
-import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;
-import org.bukkit.Bukkit;
+import net.devintia.commons.bukkit.armorstand.nms.NMSUtil;
+import net.devintia.commons.bukkit.armorstand.nms.NoGravityArmorStand;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftVillager;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-
-import java.lang.reflect.Field;
 
 /**
  * @author MiniDigger
@@ -46,26 +36,6 @@ class ArmorStandModelEntity {
 
     private float rotation;
 
-    //fields
-    private static Field bField;
-    private static Field cField;
-    private static Field look;
-
-    static {
-        try {
-            bField = PathfinderGoalSelector.class.getDeclaredField( "b" );
-            bField.setAccessible( true );
-
-            cField = PathfinderGoalSelector.class.getDeclaredField( "c" );
-            cField.setAccessible( true );
-
-            look = EntityInsentient.class.getDeclaredField( "lookController" );
-            look.setAccessible( true );
-        } catch ( NoSuchFieldException e ) {
-            e.printStackTrace();
-        }
-    }
-
     ArmorStandModelEntity( ItemStack item, ArmorStandModelSize size, String customName, Vector headPose ) {
         this.item = item;
         this.size = size;
@@ -86,27 +56,15 @@ class ArmorStandModelEntity {
                 loc.setPitch( (float) headPose.getY() );
                 loc.setYaw( (float) headPose.getX() );
 
-                armorStand = spawnArmorStand( loc, plugin );
+                armorStand = NMSUtil.spawnArmorStand( loc, plugin );
                 armorStand.setVisible( false );
                 armorStand.setAI( false );
 
                 villager = (Villager) loc.getWorld().spawnEntity( loc, EntityType.VILLAGER );
-                EntityVillager entityVillager = ( (CraftVillager) villager ).getHandle();
-                entityVillager.yaw = loc.getYaw();
-                entityVillager.pitch = loc.getPitch();
-                clearPathFinding( entityVillager );
-                entityVillager.getControllerLook().a( loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw() );
-                entityVillager.setPositionRotation( loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw() );
-                entityVillager.noclip = true;
-                entityVillager.b( true );//silent
-                entityVillager.collides = false;
-                //TODO test which ones we realy need
-                entityVillager.yaw = loc.getYaw();
-                entityVillager.pitch = loc.getPitch();
-                entityVillager.lastPitch = loc.getPitch();
-                entityVillager.lastYaw = loc.getYaw();
-                entityVillager.aO = loc.getYaw();
-                entityVillager.aM = loc.getYaw();
+                NMSUtil.clearPathFinding( villager );
+                NMSUtil.setNoClip( villager );
+                NMSUtil.setSilent( villager );
+                NMSUtil.setPitchYaw( villager, loc.getPitch(), loc.getYaw() );
                 villager.setBaby();
                 villager.addPotionEffect( new PotionEffect( PotionEffectType.INVISIBILITY, 9999999, 255, false, false ) );
                 villager.setInvulnerable( true );
@@ -114,7 +72,7 @@ class ArmorStandModelEntity {
                 armorStand.setPassenger( villager );
                 break;
             case MEDIUM:
-                armorStand = spawnArmorStand( loc, plugin );
+                armorStand = NMSUtil.spawnArmorStand( loc, plugin );
                 armorStand.setSmall( true );
                 armorStand.setVisible( false );
                 armorStand.setAI( false );
@@ -124,7 +82,7 @@ class ArmorStandModelEntity {
                 ( (NoGravityArmorStand) ( (CraftArmorStand) armorStand ).getHandle() ).update();
                 break;
             case LARGE:
-                armorStand = spawnArmorStand( loc, plugin );
+                armorStand = NMSUtil.spawnArmorStand( loc, plugin );
                 armorStand.setVisible( false );
                 armorStand.setAI( false );
                 armorStand.setCustomName( customName );
@@ -135,7 +93,6 @@ class ArmorStandModelEntity {
             case SOLID:
                 blockState = loc.getBlock().getState();
                 loc.getBlock().setTypeIdAndData( item.getTypeId(), (byte) item.getDurability(), false );
-                System.out.println( loc.getBlock().getType() );
                 break;
         }
     }
@@ -165,37 +122,10 @@ class ArmorStandModelEntity {
     void rotate( float rad ) {
         rotation = ( rotation + rad ) % 360;
         if ( armorStand != null ) {
-            EntityArmorStand entity = ( (CraftArmorStand) armorStand ).getHandle();
-            entity.yaw = rotation;
-            entity.lastYaw = rotation;
-            entity.aO = rotation;
-            entity.aM = rotation;
+            NMSUtil.setPitchYaw( armorStand, armorStand.getLocation().getPitch(), rotation );
         }
         if ( villager != null ) {
-            EntityVillager entity = ( (CraftVillager) villager ).getHandle();
-            entity.yaw = rotation;
-            entity.lastYaw = rotation;
-            entity.aO = rotation;
-            entity.aM = rotation;
-        }
-    }
-
-    private CraftArmorStand spawnArmorStand( Location loc, Plugin plugin ) {
-        CraftWorld cw = ( (CraftWorld) loc.getWorld() );
-        NoGravityArmorStand a = new NoGravityArmorStand( cw.getHandle(), loc.getX(), loc.getY(), loc.getZ() );
-        cw.getHandle().addEntity( a, CreatureSpawnEvent.SpawnReason.CUSTOM );
-        return new CraftArmorStand( (CraftServer) Bukkit.getServer(), a );
-    }
-
-    private void clearPathFinding( EntityInsentient entity ) {
-        try {
-            bField.set( entity.goalSelector, Sets.newLinkedHashSet() );
-            bField.set( entity.targetSelector, Sets.newLinkedHashSet() );
-            cField.set( entity.goalSelector, Sets.newLinkedHashSet() );
-            cField.set( entity.targetSelector, Sets.newLinkedHashSet() );
-            look.set( entity, new CustomControllerLook( entity ) );
-        } catch ( Exception exc ) {
-            exc.printStackTrace();
+            NMSUtil.setPitchYaw( villager, villager.getLocation().getPitch(), rotation );
         }
     }
 
@@ -216,7 +146,7 @@ class ArmorStandModelEntity {
         }
     }
 
-    public Entity getEntity() {
+    Entity getEntity() {
         return armorStand;
     }
 }

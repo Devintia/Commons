@@ -1,9 +1,7 @@
 package net.devintia.commons.bukkit.armorstand;
 
 import lombok.extern.java.Log;
-import net.minecraft.server.v1_9_R1.Item;
-import net.minecraft.server.v1_9_R1.MinecraftKey;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
+import net.devintia.commons.bukkit.armorstand.nms.NMSUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -123,8 +121,7 @@ public class ArmorStandModelImporter {
                         continue;
                     }
                     //item
-                    MinecraftKey mk = new MinecraftKey( temp[3] );
-                    ItemStack item = CraftItemStack.asNewCraftStack( Item.REGISTRY.get( mk ) );
+                    ItemStack item = NMSUtil.getItemStack( temp[3] );
                     if ( temp.length == 5 ) {
                         item.setDurability( Short.parseShort( temp[4] ) );
                     }
@@ -257,8 +254,8 @@ public class ArmorStandModelImporter {
             damage = Integer.parseInt( mat.split( ":" )[1] );
             mat = mat.replace( ",Damage:" + damage, "" );
         }
-        MinecraftKey mk = new MinecraftKey( mat );
-        ItemStack item = CraftItemStack.asNewCraftStack( Item.REGISTRY.get( mk ) );
+
+        ItemStack item = NMSUtil.getItemStack( mat );
         if ( damage != -1 ) {
             item.setDurability( (short) damage );
         }

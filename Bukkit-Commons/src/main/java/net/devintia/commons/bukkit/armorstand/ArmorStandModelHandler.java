@@ -3,7 +3,6 @@ package net.devintia.commons.bukkit.armorstand;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Class to store all loaded models to keep track of them and remove them on disable
  *
