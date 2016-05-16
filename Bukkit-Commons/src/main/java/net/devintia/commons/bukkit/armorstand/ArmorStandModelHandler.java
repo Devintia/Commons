@@ -1,7 +1,12 @@
 package net.devintia.commons.bukkit.armorstand;
 
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ArmorStandModelHandler {
 
     private List<ArmorStandModel> models = new ArrayList<>();
+    private Map<UUID, String> riding = new HashMap<>();
 
     /**
      * Called onDisable, will despawn all remaining models
@@ -74,5 +80,38 @@ public class ArmorStandModelHandler {
      */
     public List<ArmorStandModel> getModels() {
         return models;
+    }
+
+    /**
+     * Notifies this handler that player is now mounted to model
+     *
+     * @param player the player who is riding the model
+     * @param model  the model the player is riding
+     */
+    public void setRiding( Player player, ArmorStandModel model ) {
+        checkNotNull( player );
+
+        if ( model == null ) {
+            riding.remove( player.getUniqueId() );
+        } else {
+            riding.put( player.getUniqueId(), model.getName() );
+        }
+    }
+
+    /**
+     * Returns the model the player is riding, could be null
+     *
+     * @param player the player
+     * @return the models the player is riding, could be null
+     */
+    public ArmorStandModel getModel( Player player ) {
+        String name = riding.get( player.getUniqueId() );
+        if ( name != null ) {
+            ArmorStandModel model = get( name );
+            if ( model != null ) {
+                return model;
+            }
+        }
+        return null;
     }
 }

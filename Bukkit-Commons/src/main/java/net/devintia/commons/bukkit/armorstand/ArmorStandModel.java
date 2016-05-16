@@ -2,7 +2,6 @@ package net.devintia.commons.bukkit.armorstand;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,10 +26,12 @@ public class ArmorStandModel {
     private Location rootLocation;
     private float rotation;
     private boolean moving = false;
+    private ArmorStandModelHandler handler;
 
-    ArmorStandModel( String name, List<ArmorStandModelEntity> entites ) {
+    ArmorStandModel( String name, List<ArmorStandModelEntity> entites, ArmorStandModelHandler handler ) {
         this.name = name;
         this.entities = entites;
+        this.handler = handler;
     }
 
     /**
@@ -209,10 +210,13 @@ public class ArmorStandModel {
         }.runTaskLater( plugin, 2 ) ) );
     }
 
-    public void addPassagner( Entity e ) {
-        checkNotNull( e );
-        checkArgument( !e.isDead() );
+    public void addPassagner( Player p ) {
+        checkNotNull( p );
+        checkArgument( !p.isDead() );
+
         //TODO passagner stuff
-        entities.get( 0 ).getEntity().setPassenger( e );
+        entities.get( 0 ).getEntity().setPassenger( p );
+
+        handler.setRiding( p, this );
     }
 }

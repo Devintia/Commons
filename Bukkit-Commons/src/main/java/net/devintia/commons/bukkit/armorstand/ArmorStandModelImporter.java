@@ -171,7 +171,7 @@ public class ArmorStandModelImporter {
             }
         }
 
-        ArmorStandModel model = new ArmorStandModel( modelName, entites );
+        ArmorStandModel model = new ArmorStandModel( modelName, entites, handler );
 
         handler.add( model );
 
