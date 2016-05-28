@@ -58,18 +58,20 @@ public class ArmorStandModelListener implements Listener {
 
         cooldDown.put( player.getUniqueId(), System.currentTimeMillis() );
 
-        System.out.println( "fw " + wrapped.getForward() + " sw " + wrapped.getSideways() + " j " + wrapped.isJump() + " um " + wrapped.isUnmount() );
         ArmorStandModel model = handler.getModel( player );
         if ( model != null ) {
             if ( wrapped.getSideways() > 0 ) {
                 model.rotate( -10, plugin, null );
             } else if ( wrapped.getSideways() < 0 ) {
                 model.rotate( 10, plugin, null );
-            }
-            if ( wrapped.getForward() > 0 ) {
-                //TODO forward movement
+            } else if ( wrapped.getForward() > 0 ) {
+                model.move( true, plugin );
             } else if ( wrapped.getForward() < 0 ) {
-                //TODO backward movement
+                model.move( false, plugin );
+            } else {
+//                for ( ArmorStandModelEntity entity : model.getEntities() ) {
+//                    entity.move( new Vector( 0, 0, 0 ) );
+//                }
             }
         }
     }

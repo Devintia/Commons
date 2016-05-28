@@ -210,6 +210,7 @@ public class ArmorStandModel {
         }.runTaskLater( plugin, 2 ) ) );
     }
 
+    //TODO Javadoc
     public void addPassagner( Player p ) {
         checkNotNull( p );
         checkArgument( !p.isDead() );
@@ -218,5 +219,44 @@ public class ArmorStandModel {
         entities.get( 0 ).getEntity().setPassenger( p );
 
         handler.setRiding( p, this );
+    }
+
+    //TODO Javadoc
+    public List<ArmorStandModelEntity> getEntities() {
+        return entities;
+    }
+
+    //TODO Javadoc
+    public void move( boolean forward, Plugin plugin ) {
+        if ( moving ) {
+            moving = false;
+            return;
+        }
+
+        moving = true;
+
+        Vector velo = rootLocation.getDirection();
+        if ( !forward ) {
+            velo.multiply( -1 );
+        }
+
+        for ( ArmorStandModelEntity entity : entities ) {
+            entity.move( velo );
+        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if ( !moving ) {
+                    for ( ArmorStandModelEntity entity : entities ) {
+                        entity.move( new Vector( 0, 0, 0 ) );
+                    }
+
+                    cancel();
+                } else {
+                    rootLocation.add( velo );
+                }
+            }
+        }.runTaskTimer( plugin, 0, 1 );
     }
 }
