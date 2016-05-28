@@ -24,7 +24,6 @@ public class ItemUtil {
      */
     public static void addPageToBook( ItemStack book, BaseComponent[] page ) {
         checkNotNull( book );
-        checkArgument( book.hasItemMeta() );
 
         CraftMetaBook meta = (CraftMetaBook) book.getItemMeta();
         meta.pages.add( IChatBaseComponent.ChatSerializer.a( ComponentSerializer.toString( page ) ) );
