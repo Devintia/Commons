@@ -172,7 +172,7 @@ public class LocaleManager {
      * @throws ResourceNotLoadedException  when the Resource for the locale could not be loaded or the key is missing
      * @throws ResourceLoadFailedException when the GC has cleared out the ResourceLoader and it could not be reloaded into the cache
      */
-    public String translate( Locale locale, String translationKey, Object... args ) throws ResourceNotLoadedException, ResourceLoadFailedException {
+    public String translateWithException( Locale locale, String translationKey, Object... args ) throws ResourceNotLoadedException, ResourceLoadFailedException {
         //Validate the Player
         Validate.notNull( locale, "Locale can not be null" );
         Validate.notNull( translationKey, "The translationKey can not be null" );
@@ -198,6 +198,25 @@ public class LocaleManager {
     }
 
     /**
+     * Same as {@link #translateWithException(Locale, String, Object...)} but ignores exceptions
+     * Returns %translationkey% if an exception was caught
+     *
+     * @param locale         -
+     * @param translationKey -
+     * @param args           -
+     * @return -
+     */
+    public String translate( Locale locale, String translationKey, Object... args ) {
+        try {
+            return translateWithException( locale, translationKey, args );
+        } catch ( ResourceNotLoadedException | ResourceLoadFailedException e ) {
+            e.printStackTrace();
+        }
+
+        return "%" + translationKey + "%";
+    }
+
+    /**
      * Translate the Text based on the Player locale / default Locale.
      * If the locale from the player is not loaded the LocaleManager
      * will use the default Locale. If this is also not loaded it
@@ -210,7 +229,7 @@ public class LocaleManager {
      * @throws ResourceNotLoadedException  when the Resource for the locale could not be loaded or the key is missing
      * @throws ResourceLoadFailedException when the GC has cleared out the ResourceLoader and it could not be reloaded into the cache
      */
-    public String translate( CommandSender commandSender, String translationKey, Object... args ) throws ResourceNotLoadedException, ResourceLoadFailedException {
+    public String translateWithException( CommandSender commandSender, String translationKey, Object... args ) throws ResourceNotLoadedException, ResourceLoadFailedException {
         //Validate the CommandSender
         Validate.notNull( commandSender, "Commandsender can not be null" );
         Validate.notNull( translationKey, "The translationKey can not be null" );
@@ -224,6 +243,25 @@ public class LocaleManager {
         MessageFormat msgFormat = new MessageFormat( translationString );
         msgFormat.setLocale( defaultLocale );
         return msgFormat.format( args );
+    }
+
+    /**
+     * Same as {@link #translateWithException(CommandSender, String, Object...)} but ignores exceptions
+     * Returns %translationkey% if an exception was caught
+     *
+     * @param commandSender  -
+     * @param translationKey -
+     * @param args           -
+     * @return -
+     */
+    public String translate( CommandSender commandSender, String translationKey, Object... args ) {
+        try {
+            return translateWithException( commandSender, translationKey, args );
+        } catch ( ResourceNotLoadedException | ResourceLoadFailedException e ) {
+            e.printStackTrace();
+        }
+
+        return "%" + translationKey + "%";
     }
 
     /**
