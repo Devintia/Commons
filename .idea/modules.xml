@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/async/async.iml" filepath="$PROJECT_DIR$/async/async.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Bukkit-Commons/bukkit-commons.iml" filepath="$PROJECT_DIR$/Bukkit-Commons/bukkit-commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commons.iml" filepath="$PROJECT_DIR$/commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/i18n/i18n.iml" filepath="$PROJECT_DIR$/i18n/i18n.iml" />
+    </modules>
+  </component>
+</project>

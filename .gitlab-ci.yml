@@ -1,0 +1,4 @@
+build_commons:
+  stage: build
+  script:
+    - mvn clean install
