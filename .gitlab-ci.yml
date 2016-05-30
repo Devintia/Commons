@@ -4,4 +4,4 @@ build_commons:
     - mvn clean install
   artifacts:
     paths:
-      - **/target/*.jar
+      - '**/target/*.jar'
