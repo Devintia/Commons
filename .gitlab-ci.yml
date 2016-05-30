@@ -2,3 +2,6 @@ build_commons:
   stage: build
   script:
     - mvn clean install
+  artifacts:
+    paths:
+      - **/target/*.jar
