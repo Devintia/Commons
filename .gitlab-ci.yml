@@ -1,7 +1,7 @@
 build_commons:
   stage: build
   script:
-    - mvn clean install
+    - mvn clean deploy
   artifacts:
     paths:
       - '**/target/*.jar'
