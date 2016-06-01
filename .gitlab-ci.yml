@@ -1,6 +1,6 @@
 before_script:
   - git log -n 3
-  - git push --mirror git@github.com:Devintia/Commons.git
+  - git push git@github.com:Devintia/Commons.git
 build_commons:
   stage: build
   script:
