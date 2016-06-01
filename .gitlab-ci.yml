@@ -7,3 +7,7 @@ build_commons:
   artifacts:
     paths:
       - '**/target/*.jar'
+build_docker:
+  stage: deploy
+  script:
+    - "curl -X POST -F token=a1adc1878e24ffd586b5e9f9546045 -F ref=PUSH_BUILD http://git.devintia.net/api/v3/projects/1/trigger/builds"
