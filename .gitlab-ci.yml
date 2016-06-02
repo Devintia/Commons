@@ -11,4 +11,4 @@ build_commons:
 build_docker:
   stage: deploy
   script:
-    - "curl -X POST -F token=a1adc1878e24ffd586b5e9f9546045 -F ref=master http://git.devintia.net/api/v3/projects/1/trigger/builds"
+    - "curl -X POST -F token=$DOCKER_BUILD_TOKEN -F ref=master http://git.devintia.net/api/v3/projects/1/trigger/builds"
