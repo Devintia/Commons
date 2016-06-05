@@ -26,7 +26,7 @@ public class PaginatorTest {
 
         ChatPage page2 = Paginator.paginate( comps, 2, 10, 2 );
         assertThat( getLineText( page2.getLines()[0] ), is( "up a whole" ) );
-        assertThat( getLineText( page2.getLines()[1] ), is( "page" ) );
+        assertThat( getLineText( page2.getLines()[1] ), is( "page" ) ); 
     }
 
 
