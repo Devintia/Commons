@@ -1,6 +1,8 @@
 package net.devintia.commons.bukkit.armorstand;
 
 import com.google.common.collect.Sets;
+import net.devintia.commons.bukkit.armorstand.nms.CustomControllerLook;
+import net.devintia.commons.bukkit.armorstand.nms.NoGravityArmorStand;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
 import net.minecraft.server.v1_9_R1.EntityVillager;
 import net.minecraft.server.v1_9_R1.PathfinderGoalSelector;

@@ -6,11 +6,11 @@ import net.minecraft.server.v1_9_R1.EntityInsentient;
 /**
  * Custom controller look, completely disables every look rotation
  */
-class CustomControllerLook extends ControllerLook {
+public class CustomControllerLook extends ControllerLook {
 
     private EntityInsentient a;
 
-    CustomControllerLook( EntityInsentient entityInsentient ) {
+    public CustomControllerLook( EntityInsentient entityInsentient ) {
         super( entityInsentient );
         this.a = entityInsentient;
     }

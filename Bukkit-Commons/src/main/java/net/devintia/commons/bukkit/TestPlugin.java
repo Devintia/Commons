@@ -1,18 +1,16 @@
 package net.devintia.commons.bukkit;
 
+import lombok.Getter;
 import net.devintia.commons.bukkit.armorstand.ArmorStandModelHandler;
 import net.devintia.commons.bukkit.armorstand.ArmorStandModelImporter;
 import net.devintia.commons.bukkit.armorstand.ArmorStandModelListener;
 import net.devintia.commons.bukkit.armorstand.commands.ArmorStandModelCommands;
 import net.devintia.commons.bukkit.armorstand.commands.ArmorStandModelCompleter;
-import net.devintia.commons.bukkit.armorstand.nms.NMSUtil;
 import net.devintia.commons.bukkit.command.CommandArguments;
 import net.devintia.commons.bukkit.command.CommandHandler;
 import net.devintia.commons.bukkit.command.CommandInfo;
 import net.devintia.commons.bukkit.command.CommandUtil;
 import net.devintia.commons.bukkit.command.CompleterInfo;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Minecart;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import java.util.List;
  * @author MiniDigger
  * @version 1.0.0
  */
+@Getter
 public class TestPlugin extends JavaPlugin {
 
     private CommandHandler cmdHandler;
@@ -39,8 +38,8 @@ public class TestPlugin extends JavaPlugin {
         armorStandModelHandler = new ArmorStandModelHandler();
         ArmorStandModelImporter.setHandler( armorStandModelHandler );
 
-        cmdHandler.register( new ArmorStandModelCommands( armorStandModelHandler, this ) );
-        cmdHandler.register( new ArmorStandModelCompleter( armorStandModelHandler, this ) );
+        cmdHandler.register( new ArmorStandModelCommands( this ) );
+        cmdHandler.register( new ArmorStandModelCompleter( this ) );
 
         getServer().getPluginManager().registerEvents( new ArmorStandModelListener(), this );
     }
@@ -104,11 +103,5 @@ public class TestPlugin extends JavaPlugin {
         }
 
         cmdHandler.unregisterCommand( args.getArg( 0 ) );
-    }
-
-    @CommandInfo( name = "test", perm = "name" )
-    public void test( CommandArguments args ) {
-        Boat boat = NMSUtil.spawnBoat( args.getPlayer().getLocation(), this );
-        boat.setPassenger( args.getPlayer() );
     }
 }

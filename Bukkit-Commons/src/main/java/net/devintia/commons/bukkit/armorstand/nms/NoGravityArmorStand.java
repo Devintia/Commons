@@ -15,9 +15,9 @@ import org.bukkit.entity.Player;
  * @author MiniDigger
  * @version 1.0.0
  */
-class NoGravityArmorStand extends EntityArmorStand {
+public class NoGravityArmorStand extends EntityArmorStand {
 
-    NoGravityArmorStand( World world, double d0, double d1, double d2) {
+    public NoGravityArmorStand( World world, double d0, double d1, double d2 ) {
         super( world, d0, d1, d2 );
         this.noclip = true;
     }
@@ -25,7 +25,7 @@ class NoGravityArmorStand extends EntityArmorStand {
     /**
      * Notifies the players about changes to this armorstand
      */
-    void update() {
+    public void update() {
         getDataWatcher();
         PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata( getId(), getDataWatcher(), false );
         for ( Player p : Bukkit.getOnlinePlayers() ) {
