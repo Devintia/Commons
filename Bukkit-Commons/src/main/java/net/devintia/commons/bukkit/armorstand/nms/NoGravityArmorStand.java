@@ -1,4 +1,4 @@
-package net.devintia.commons.bukkit.armorstand;
+package net.devintia.commons.bukkit.armorstand.nms;
 
 import net.minecraft.server.v1_9_R1.EntityArmorStand;
 import net.minecraft.server.v1_9_R1.PacketPlayOutEntityMetadata;
@@ -7,7 +7,6 @@ import net.minecraft.server.v1_9_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  * A custom armorstand that does not respect gravity.<br>

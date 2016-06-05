@@ -1,4 +1,4 @@
-package net.devintia.commons.bukkit.armorstand;
+package net.devintia.commons.bukkit.armorstand.nms;
 
 import net.minecraft.server.v1_9_R1.ControllerLook;
 import net.minecraft.server.v1_9_R1.EntityInsentient;
