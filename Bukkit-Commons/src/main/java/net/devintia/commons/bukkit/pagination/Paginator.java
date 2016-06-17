@@ -75,7 +75,10 @@ public class Paginator {
         BaseComponent lastComp = null;
         for ( BaseComponent comp : input ) {
             lastComp = comp;
-            String text = comp.toPlainText() + " ";
+            String text = comp.toPlainText();
+            if ( !text.endsWith( " " ) ) {
+                text = text + " ";
+            }
             char[] chars = text.toCharArray();
 
             for ( char c : chars ) {
