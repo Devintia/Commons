@@ -1,7 +1,7 @@
 package net.devintia.commons.bukkit.armorstand.nms;
 
-import net.minecraft.server.v1_9_R1.ControllerLook;
-import net.minecraft.server.v1_9_R1.EntityInsentient;
+import net.minecraft.server.v1_10_R1.ControllerLook;
+import net.minecraft.server.v1_10_R1.EntityInsentient;
 
 /**
  * Custom controller look, completely disables every look rotation

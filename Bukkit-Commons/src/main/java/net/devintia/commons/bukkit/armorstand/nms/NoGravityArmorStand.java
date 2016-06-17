@@ -1,11 +1,11 @@
 package net.devintia.commons.bukkit.armorstand.nms;
 
-import net.minecraft.server.v1_9_R1.EntityArmorStand;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityTeleport;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_10_R1.EntityArmorStand;
+import net.minecraft.server.v1_10_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_10_R1.PacketPlayOutEntityTeleport;
+import net.minecraft.server.v1_10_R1.World;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**

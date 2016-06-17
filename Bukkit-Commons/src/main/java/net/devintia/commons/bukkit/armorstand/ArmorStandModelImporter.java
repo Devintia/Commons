@@ -1,9 +1,9 @@
 package net.devintia.commons.bukkit.armorstand;
 
 import lombok.extern.java.Log;
-import net.minecraft.server.v1_9_R1.Item;
-import net.minecraft.server.v1_9_R1.MinecraftKey;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_10_R1.Item;
+import net.minecraft.server.v1_10_R1.MinecraftKey;
+import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 

@@ -1,7 +1,7 @@
 package net.devintia.commons.bukkit.armorstand.nms;
 
-import net.minecraft.server.v1_9_R1.EntityBoat;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_10_R1.EntityBoat;
+import net.minecraft.server.v1_10_R1.World;
 import org.bukkit.Location;
 import org.bukkit.entity.Vehicle;
 

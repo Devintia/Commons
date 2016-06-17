@@ -1,7 +1,7 @@
 package net.devintia.commons.bukkit.armorstand.nms;
 
-import net.minecraft.server.v1_9_R1.EntityArmorStand;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_10_R1.EntityArmorStand;
+import net.minecraft.server.v1_10_R1.World;
 
 /**
  * Created by Martin on 16.05.2016.
